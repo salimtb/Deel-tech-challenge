@@ -20,9 +20,31 @@ describe('contractsController', () => {
   it('should return not found', async () => {
     const res = await agent
       .set({
-        profile_id: 2,
+        profile_id: 1,
       })
-      .get('/contracts/1');
+      .get('/contracts/test');
     expect(res.status).toEqual(404);
+  });
+
+  it('should return contracts for given user', async () => {
+    const res = await agent
+      .set({
+        profile_id: 1,
+      })
+      .get('/contracts');
+    expect(res.status).toEqual(200);
+    expect(res).toMatchObject({
+      status: 200,
+      body: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          terms: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ContractorId: expect.any(Number),
+          ClientId: expect.any(Number),
+        }),
+      ]),
+    });
   });
 });

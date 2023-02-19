@@ -23,6 +23,23 @@ async function getContractById(req, res) {
   }
 }
 
+async function getNonTerminatedUserContracts(req, res) {
+  const { id: userId } = req.profile;
+
+  if (!userId) {
+    res.status(400).end('bad request, userId is mandatory');
+  }
+  try {
+    const contract = await service.getNonTerminatedUserContracts(userId);
+    if (!contract) return res.status(404).end();
+    res.json(contract);
+  } catch (error) {
+    console.log(error);
+    res.status(500).end();
+  }
+}
+
 router.get('/:id', getContractById);
+router.get('/', getNonTerminatedUserContracts);
 
 module.exports = router;
