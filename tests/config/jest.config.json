@@ -1,0 +1,10 @@
+{
+    "moduleFileExtensions": ["js"],
+    "rootDir": "../",
+    "transform": {
+      "\\.[jt]sx?$": "esbuild-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": ".*\\.test\\.js$",
+    "verbose": true
+  }
