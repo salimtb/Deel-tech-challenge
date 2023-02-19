@@ -7,6 +7,7 @@ const http = require('http');
 const app = express();
 const httpPort = 3001;
 const contacts = require('./contract/contracts.controller');
+const jobs = require('./jobs/jobs.controller');
 
 // Use body-parser
 app.use(bodyParser.json());
@@ -16,6 +17,7 @@ app.set('models', sequelize.models);
 
 app.use(getProfile);
 app.use('/contracts', contacts);
+app.use('/jobs', jobs);
 
 http.createServer(app).listen(httpPort, () => {
   console.log('http server running');

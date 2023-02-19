@@ -5,11 +5,6 @@ const service = require('./contracts.service');
 
 const router = express.Router();
 
-/**
- * Find contract by Id for a specific profile
- * @param {object} - Request
- * @return {object} - response
- */
 async function getContractById(req, res) {
   const { id } = req.params;
   const { id: profileId } = req.profile;
@@ -19,7 +14,10 @@ async function getContractById(req, res) {
     if (!contract) return res.status(404).end();
     res.json(contract);
   } catch (error) {
-    res.status(500).end();
+    if (error.code) {
+      res.status(error.code).end(error.message);
+    }
+    res.status(500).end('internal server error');
   }
 }
 
@@ -34,8 +32,10 @@ async function getNonTerminatedUserContracts(req, res) {
     if (!contract) return res.status(404).end();
     res.json(contract);
   } catch (error) {
-    console.log(error);
-    res.status(500).end();
+    if (error.code) {
+      res.status(error.code).end(error.message);
+    }
+    res.status(500).end('internal server error');
   }
 }
 
