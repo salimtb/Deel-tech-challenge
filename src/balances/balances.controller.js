@@ -10,7 +10,7 @@ async function depositMoney(req, res) {
   const { amount } = req.body;
   try {
     const deposit = await service.depositMoney(clientId, amount);
-    res.json(deposit);
+    return res.json(deposit);
   } catch (error) {
     if (error.code) {
       return res.status(error.code).end(error.message);
