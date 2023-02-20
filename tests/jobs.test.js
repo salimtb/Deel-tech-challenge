@@ -19,6 +19,15 @@ describe('jobsController', () => {
     });
   });
 
+  it('should not pay a job if job is not found', async () => {
+    const res = await agent
+      .set({
+        profile_id: 1,
+      })
+      .post('/jobs/100/pay');
+
+    expect(res.status).toEqual(404);
+  });
   it('should pay a job', async () => {
     const res = await agent
       .set({

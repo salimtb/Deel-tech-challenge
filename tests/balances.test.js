@@ -42,4 +42,16 @@ describe('balancesController', () => {
       });
     expect(res.status).toEqual(403);
   });
+
+  it('should not deposit and increment the balance if the user is not found', async () => {
+    const res = await agent
+      .post('/balances/deposit/100')
+      .set({
+        profile_id: 1,
+      })
+      .send({
+        amount: 200,
+      });
+    expect(res.status).toEqual(404);
+  });
 });

@@ -38,6 +38,19 @@ describe('adminController', () => {
     });
   });
 
+  it('should return not found if start date is supp to endDate', async () => {
+    const res = await agent
+      .get('/admin/best-profession')
+      .set({
+        profile_id: 1,
+      })
+      .query({
+        start: '2022-01-15',
+        end: '2020-10-15',
+      });
+    expect(res.status).toEqual(404);
+  });
+
   it('should return the best client', async () => {
     const res = await agent
       .get('/admin/best-clients')
@@ -59,5 +72,18 @@ describe('adminController', () => {
         }),
       ]),
     });
+  });
+
+  it('should return not found if start date is supp to endDate', async () => {
+    const res = await agent
+      .get('/admin/best-clients')
+      .set({
+        profile_id: 1,
+      })
+      .query({
+        start: '2022-01-15',
+        end: '2020-10-15',
+      });
+    expect(res.status).toEqual(404);
   });
 });
