@@ -11,12 +11,12 @@ async function getUserUnpaidJobs(req, res) {
   try {
     const jobs = await service.getUserUnpaidJobs(profileId);
     if (!jobs) return res.status(404).end();
-    res.json(jobs);
+    return res.json(jobs);
   } catch (error) {
     if (error.code) {
-      res.status(error.code).end(error.message);
+      return res.status(error.code).end(error.message);
     }
-    res.status(500).end('internal server error');
+    return res.status(500).end('internal server error');
   }
 }
 
@@ -25,14 +25,13 @@ async function payJob(req, res) {
   const { job_id: jobId } = req.params;
 
   try {
-    const jobs = await service.payJob(jobId, userId);
-    if (!jobs) return res.status(404).end();
-    res.json(jobs);
+    const payedJob = await service.payJob(jobId, userId);
+    res.json(payedJob);
   } catch (error) {
     if (error.code) {
-      res.status(error.code).end(error.message);
+      return res.status(error.code).end(error.message);
     }
-    res.status(500).end('internal server error');
+    return res.status(500).end('internal server error');
   }
 }
 

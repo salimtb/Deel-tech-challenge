@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const { Contract, Job, Profile, sequelize } = require('../model');
+const HttpError = require('../errors/httpErrors');
 
 /**
  * Find contract by Id for a specific profile

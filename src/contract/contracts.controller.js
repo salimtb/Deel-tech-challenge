@@ -12,12 +12,12 @@ async function getContractById(req, res) {
   try {
     const contract = await service.getContractById(id, profileId);
     if (!contract) return res.status(404).end();
-    res.json(contract);
+    return res.json(contract);
   } catch (error) {
     if (error.code) {
-      res.status(error.code).end(error.message);
+      return res.status(error.code).end(error.message);
     }
-    res.status(500).end('internal server error');
+    return res.status(500).end('internal server error');
   }
 }
 
@@ -25,17 +25,17 @@ async function getNonTerminatedUserContracts(req, res) {
   const { id: userId } = req.profile;
 
   if (!userId) {
-    res.status(400).end('bad request, userId is mandatory');
+    return res.status(400).end('bad request, userId is mandatory');
   }
   try {
     const contract = await service.getNonTerminatedUserContracts(userId);
     if (!contract) return res.status(404).end();
-    res.json(contract);
+    return res.json(contract);
   } catch (error) {
     if (error.code) {
-      res.status(error.code).end(error.message);
+      return res.status(error.code).end(error.message);
     }
-    res.status(500).end('internal server error');
+    return res.status(500).end('internal server error');
   }
 }
 
