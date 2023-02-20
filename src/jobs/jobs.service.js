@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Contract, Job } = require('../model');
+const { Contract, Job, Profile, sequelize } = require('../model');
 
 /**
  * Find contract by Id for a specific profile
@@ -32,6 +32,66 @@ async function getUserUnpaidJobs(userId) {
   });
 }
 
+async function payJob(jobId, clientId) {
+  const job = await Job.findOne({
+    include: [
+      {
+        model: Contract,
+        required: true,
+        where: { ClientId: clientId },
+      },
+    ],
+    where: { id: jobId },
+  });
+
+  // job checks
+  if (!job) {
+    throw new HttpError(404, 'Job not found');
+  }
+
+  if (!!job.paid) {
+    throw new HttpError(409, 'Job is already paid');
+  }
+
+  await sequelize.transaction(async t => {
+    // balance check
+    const client = await Profile.findByPk(clientId, { transaction: t });
+
+    if (client.balance < job.price) {
+      throw new HttpError(400, 'Insufficient funds');
+    }
+
+    await Promise.all([
+      Job.update({ paid: true, paymentDate: new Date() }, { where: { id: jobId }, transaction: t }),
+      Profile.increment('balance', {
+        by: job.price,
+        where: { id: job.Contract.ContractorId },
+        transaction: t,
+      }),
+      Profile.decrement('balance', {
+        by: job.price,
+        where: { id: job.Contract.ClientId },
+        transaction: t,
+      }),
+    ]);
+
+    return job;
+  });
+
+  // return updated job
+  return Job.findOne({
+    include: [
+      {
+        model: Contract,
+        required: true,
+        where: { ClientId: clientId },
+      },
+    ],
+    where: { id: jobId },
+  });
+}
+
 module.exports = {
   getUserUnpaidJobs,
+  payJob,
 };

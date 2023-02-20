@@ -16,7 +16,7 @@
     "prettier:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest --config ./tests/config/jest.config.json --forceExit --runInBand"
+    "test": "npm run seed & NODE_ENV=test jest --config ./tests/config/jest.config.json --forceExit --runInBand"
   },
   "devDependencies": {
     "@jest/globals": "^29.4.3",

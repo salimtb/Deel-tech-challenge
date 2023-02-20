@@ -19,8 +19,10 @@ app.use(getProfile);
 app.use('/contracts', contacts);
 app.use('/jobs', jobs);
 
-http.createServer(app).listen(httpPort, () => {
-  console.log('http server running');
-});
+if (process.env.NODE_ENV !== 'test') {
+  http.createServer(app).listen(httpPort, () => {
+    console.log('http server running');
+  });
+}
 
 module.exports = app;

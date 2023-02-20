@@ -1,7 +1,4 @@
-const app = require('../src/webserver');
-const request = require('supertest');
-const agent = request.agent(app);
-
+const agent = require('./config/setupTests');
 describe('contractsController', () => {
   it('should not return run request without auth', async () => {
     const res = await agent.get('/contracts/1');
