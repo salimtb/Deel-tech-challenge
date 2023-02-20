@@ -1,3 +1,12 @@
+# Installation
+go to the root and execute the command `npm install`
+
+`run npm start`
+
+if you want to run the test , you can use the command:
+`npm run test`
+
+
 # DEEL BACKEND TASK
 
 💫 Welcome! 🎉
