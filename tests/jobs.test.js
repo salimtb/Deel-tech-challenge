@@ -19,7 +19,7 @@ describe('jobsController', () => {
     });
   });
 
-  it.skip('should pay a job', async () => {
+  it('should pay a job', async () => {
     const res = await agent
       .set({
         profile_id: 1,
@@ -29,5 +29,15 @@ describe('jobsController', () => {
     expect(res.status).toEqual(200);
     expect(res.body.paid).toBe(true);
     expect(res.body.paymentDate).not.toBe(null);
+  });
+
+  it('should not pay a job if its already payed', async () => {
+    const res = await agent
+      .set({
+        profile_id: 1,
+      })
+      .post('/jobs/1/pay');
+
+    expect(res.status).toEqual(409);
   });
 });
