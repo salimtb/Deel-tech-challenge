@@ -10,7 +10,6 @@ async function getBestProfession(req, res) {
     const bestProfession = await service.getBestProfession(startDate, endDate);
     return res.json(bestProfession);
   } catch (error) {
-    console.log('ERROR ---', error);
     if (error.code) {
       return res.status(error.code).end(error.message);
     }
@@ -18,6 +17,20 @@ async function getBestProfession(req, res) {
   }
 }
 
-router.get('/best-profession', getBestProfession);
+async function getBestClients(req, res) {
+  const { start: startDate, end: endDate, limit = 2 } = req.query;
+
+  try {
+    const bestClient = await service.getBestClients(startDate, endDate, limit);
+    return res.json(bestClient);
+  } catch (error) {
+    if (error.code) {
+      return res.status(error.code).end(error.message);
+    }
+    return res.status(500).end('internal server error');
+  }
+}
+
+router.get('/best-profession', getBestProfession).get('/best-clients', getBestClients);
 
 module.exports = router;

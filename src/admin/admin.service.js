@@ -35,6 +35,42 @@ async function getBestProfession(startDate, endDate) {
   };
 }
 
+async function getBestClients(startDate, endDate, limit = 2) {
+  const results = await Job.findAll({
+    raw: true,
+    attributes: [[fn('SUM', col('price')), 'totalPaid']],
+    include: [
+      {
+        model: Contract,
+        required: true,
+        include: [
+          {
+            model: Profile,
+            required: true,
+            as: 'Client',
+          },
+        ],
+      },
+    ],
+    where: {
+      paymentDate: { [Op.between]: [startDate, endDate] },
+      paid: true,
+    },
+    group: ['Contract.ClientId'],
+    order: [[col('totalPaid'), 'DESC']],
+    limit,
+  });
+  if (!results.length) {
+    throw new HttpError(404, 'Client not found');
+  }
+  return results.map(result => ({
+    id: result['Contract.Client.id'],
+    paid: result.totalPaid,
+    fullName: `${result['Contract.Client.firstName']} ${result['Contract.Client.lastName']}`,
+  }));
+}
+
 module.exports = {
   getBestProfession,
+  getBestClients,
 };

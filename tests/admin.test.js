@@ -37,4 +37,27 @@ describe('adminController', () => {
       }),
     });
   });
+
+  it('should return the best client', async () => {
+    const res = await agent
+      .get('/admin/best-clients')
+      .set({
+        profile_id: 1,
+      })
+      .query({
+        start: '2020-01-15',
+        end: '2020-10-15',
+      });
+    expect(res.status).toEqual(200);
+    expect(res).toMatchObject({
+      status: 200,
+      body: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          paid: expect.any(Number),
+          fullName: expect.any(String),
+        }),
+      ]),
+    });
+  });
 });
